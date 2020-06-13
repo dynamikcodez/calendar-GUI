@@ -1,0 +1,87 @@
+import tkinter as tk
+import calendar
+from time import ctime
+
+main_window = tk.Tk()
+main_window.title("Date Veiwer")
+# main_window.geometry("600x600")
+# show current time
+current_time = ctime()
+veiw_current_time = tk.Label(text=current_time)
+veiw_current_time.after(1)  # supposed to update/recall every 1 milisec
+veiw_current_time.grid(column=0, row=0)
+
+promptlabel = tk.Label(text="What date do you want to find")
+promptlabel.grid(column=1, row=0)
+
+# labels and entry boxes
+day_label = tk.Label(text="Enter day ")
+day_label.grid(column=1, row=1)
+daydisplay = tk.Entry()
+daydisplay.grid(column=2, row=1)
+
+month_label = tk.Label(text="Enter month ")
+month_label.grid(column=1, row=2)
+month_display_ = tk.Entry()
+month_display_.grid(column=2, row=2)
+
+year_label = tk.Label(text="Enter year ")
+year_label.grid(column=1, row=3)
+year_display_ = tk.Entry()
+year_display_.grid(column=2, row=3)
+
+# the code below shows a calendar on the screen
+# later i would like it to show a calendar of the current month
+#  alone without user input
+calendar_ = calendar.calendar(2020)
+show_calendar_ = tk.Label(text=calendar_)
+show_calendar_.grid()
+
+
+def calendar_():
+    """this function shows a calander of any wanted date"""
+    # it also does some i extra things i need to put elsewhere like calculating how long from today to the wanted date
+    #  and it shows what day the date ends up on
+    from datetime import date
+    day_ = int(daydisplay.get())  # gets input from specified entry field
+    month_ = int(month_display_.get())
+    year_ = int(year_display_.get())
+    birthday = calendar.weekday(int(year_), int(month_), int(day_))  # day in number format of inputed date
+    birthdate = date(int(year_), int(month_), int(day_))  # date to be found from user input
+    today_ = date.today()  # present time
+    bday = birthdate - today_
+    bday = ("The " + str(day_),
+            " day of the " + str(month_) + " month of the year " + str(year_) + " is in " + str(bday) + " days")
+    if birthday == 4:
+        day_of_the_week = "the date you put in is a " + "friday"  # displays the day which the calculated date ends on
+    if birthday == 0:
+        day_of_the_week = "the date you put in is a " + "monday"
+    if birthday == 1:
+        day_of_the_week = "the date you put in is a " + "tuesday"
+    if birthday == 2:
+        day_of_the_week = "the date you put in is a " + "wednsday"
+    if birthday == 3:
+        day_of_the_week = "the date you put in is a " + "thursday"
+    if birthday == 6:
+        day_of_the_week = "the date you put in is a " + "sunday"
+    if birthday == 5:
+        day_of_the_week = "the date you put in is a " + "saturday"
+
+    calendar_veiw = (calendar.month(int(year_), int(month_)))  # prints calendar veiw of date inputed
+    return bday, birthdate, calendar_veiw, day_of_the_week
+
+
+def veiw_():
+    """this function displays the output of the above function in a text field """
+    veiw_date = calendar_()
+    window2 = tk.Toplevel(main_window)
+    display_calendar = tk.Text(master=window2)
+    display_calendar.grid()
+    display_calendar.insert(tk.END, veiw_date)
+
+
+# button which carries out the veiw function
+show_button = tk.Button(text="Show Date", command=veiw_)
+show_button.grid(column=3, row=3)
+
+main_window.mainloop()
